@@ -1,0 +1,25 @@
+services:
+  opencode:
+    image: dk6v/opencode:${SCRIPT_VERSION}
+    container_name: opencode
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      # Opencode local persisten files
+      - .config:/home/opencode
+      # Docker socket for Docker-in-Docker access
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+
+networks:
+  default:
+    name: docker-internal
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
